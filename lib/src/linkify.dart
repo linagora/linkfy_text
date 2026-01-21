@@ -375,14 +375,14 @@ TextSpan _linkify({
   Map<LinkType, TextStyle>? customLinkStyles,
   Function(Link)? onTap,
 }) {
-  final _regExp = constructRegExpFromLinkType(linkTypes ?? [LinkType.url]);
+  final regExp = constructRegExpFromLinkType(linkTypes ?? [LinkType.url]);
 
   //  return the full text if there's no match or if empty
-  if (!_regExp.hasMatch(text) || text.isEmpty) return TextSpan(text: text);
+  if (!regExp.hasMatch(text) || text.isEmpty) return TextSpan(text: text);
 
-  final texts = text.split(_regExp);
+  final texts = text.split(regExp);
   final List<InlineSpan> spans = [];
-  final links = _regExp.allMatches(text).toList();
+  final links = regExp.allMatches(text).toList();
 
   for (final text in texts) {
     spans.add(TextSpan(

@@ -62,6 +62,8 @@ LinkType? getMatrixMatchedType(String match) {
     return LinkType.email;
   } else if (RegExp(MatrixConstants.urlRegExp).hasMatch(match)) {
     return LinkType.url;
+  } else if (MatrixConstants.isValidDate(match)) {
+    return null;
   } else if (MatrixConstants.isValidPhoneNumber(match)) {
     return LinkType.phone;
   } else if (RegExp(MatrixConstants.userTagRegExp).hasMatch(match)) {
