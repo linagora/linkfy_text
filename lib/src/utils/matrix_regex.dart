@@ -46,13 +46,17 @@ RegExp constructMatrixRegExpFromLinkType(List<LinkType> types) {
             : buffer
                 .write("(${regexToUse.pattern})|(${MatrixConstants.emailRegExp})|");
         break;
+      case LinkType.date:
+        isLast
+            ? buffer.write("(${MatrixConstants.dateRegExp})")
+            : buffer.write("(${MatrixConstants.dateRegExp})|");
+        break;
       case LinkType.phone:
         isLast
             ? buffer.write("(${MatrixConstants.phoneRegExp})")
             : buffer.write("(${MatrixConstants.phoneRegExp})|");
         break;
-      default:
-    }
+      }
   }
   return RegExp(buffer.toString());
 }

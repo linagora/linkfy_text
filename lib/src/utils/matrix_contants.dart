@@ -39,9 +39,11 @@ class MatrixConstants {
   /// Westhen and easthern arabic numerals
   static const String _digits = r'0-9０-９٠-٩۰-۹';
 
+  static const String dateRegExp = r'^(\d{1,4})[./-](\d{1,2})[./-](\d{1,4})$';
+
   static bool isValidDate(String input) {
     // 1. Regex to extract the 3 numeric segments
-    final datePattern = RegExp(r'^(\d{1,4})[./-](\d{1,2})[./-](\d{1,4})$');
+    final datePattern = RegExp(dateRegExp);
     final match = datePattern.firstMatch(input);
     if (match == null) return false;
 
