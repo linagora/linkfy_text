@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:linkfy_text/linkfy_text.dart';
-import 'package:linkfy_text/src/matrix_linkify.dart';
 
 void main() {
   group('LinkifyTextSpans test phone number', () {

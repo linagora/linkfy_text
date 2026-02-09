@@ -39,6 +39,51 @@ class MatrixConstants {
   /// Westhen and easthern arabic numerals
   static const String _digits = r'0-9０-９٠-٩۰-۹';
 
+  static const String dateRegExp = r'^(\d{1,4})[./-](\d{1,2})[./-](\d{1,4})$';
+
+  static bool isValidDate(String input) {
+    // 1. Regex to extract the 3 numeric segments
+    final datePattern = RegExp(dateRegExp);
+    final match = datePattern.firstMatch(input);
+    if (match == null) return false;
+
+    int p1 = int.parse(match.group(1)!);
+    int p2 = int.parse(match.group(2)!);
+    int p3 = int.parse(match.group(3)!);
+
+    int day, month, year;
+
+    // 2. Smart Logic: Determine which part is the Year
+    if (p1 > 31) {
+      // Format is likely YYYY-MM-DD
+      year = p1;
+      month = p2;
+      day = p3;
+    } else if (p3 > 31 || (p3 > 12 && p3 <= 99)) {
+      // Format is likely DD-MM-YYYY or MM-DD-YYYY
+      // Note: This still has the DMY vs MDY ambiguity for "01-02-2021"
+      day = p1;
+      month = p2;
+      year = p3;
+    } else {
+      // Fallback: Default to DMY
+      day = p1;
+      month = p2;
+      year = p3;
+    }
+
+    // 3. Handle 2-digit years (e.g., 21 -> 2021)
+    if (year < 100) year += 2000;
+
+    // 4. Final Logical Validation
+    try {
+      final date = DateTime(year, month, day);
+      return date.year == year && date.month == month && date.day == day;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /// Regex to find possible phone number candidates in a string.
   ///
   /// This regex tries to match all phone numbers. It doesn't match special
