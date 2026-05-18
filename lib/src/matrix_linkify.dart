@@ -4,6 +4,11 @@ import 'package:linkfy_text/src/enum.dart';
 import 'package:linkfy_text/src/model/link.dart';
 import 'package:linkfy_text/src/utils/matrix_regex.dart';
 
+/// Builder for rendering a detected link as a custom [InlineSpan].
+/// Receives the matched [Link] and the resolved [style]. Return `null` to
+/// fall back to the default [LinkTextSpan] behaviour.
+typedef LinkifyLinkBuilder = InlineSpan? Function(Link link, TextStyle? style);
+
 /// Matrix Linkify [text] containing urls, emails or hashtag
 class MatrixLinkifyText extends StatelessWidget {
   final String text;
@@ -14,6 +19,7 @@ class MatrixLinkifyText extends StatelessWidget {
   final ThemeData? themeData;
   final Function(Link)? onTapLink;
   final Function(TapDownDetails, Link)? onTapDownLink;
+  final LinkifyLinkBuilder? linkBuilder;
   final int? maxLines;
 
   const MatrixLinkifyText({
@@ -27,6 +33,7 @@ class MatrixLinkifyText extends StatelessWidget {
     this.themeData,
     this.onTapLink,
     this.onTapDownLink,
+    this.linkBuilder,
   }) : super(key: key);
 
   @override
@@ -40,6 +47,7 @@ class MatrixLinkifyText extends StatelessWidget {
         themeData: themeData,
         onTapLink: onTapLink,
         onTapDownLink: onTapDownLink,
+        linkBuilder: linkBuilder,
       ),
       textAlign: textAlign,
       maxLines: maxLines,
@@ -167,6 +175,7 @@ TextSpan LinkifyTextSpans({
   ThemeData? themeData,
   Function(Link)? onTapLink,
   Function(TapDownDetails, Link)? onTapDownLink,
+  LinkifyLinkBuilder? linkBuilder,
 }) {
   textStyle ??= themeData?.textTheme.bodyMedium;
   linkStyle ??= themeData?.textTheme.bodyMedium?.copyWith(
@@ -208,11 +217,17 @@ TextSpan LinkifyTextSpans({
         continue;
       }
       // add the link
+      final resolvedStyle = customLinkStyles?[link.type] ?? linkStyle;
+      final built = linkBuilder?.call(link, resolvedStyle);
+      if (built != null) {
+        spans.add(built);
+        continue;
+      }
       spans.add(
         LinkTextSpan(
           text: link.value,
           link: link,
-          style: customLinkStyles?[link.type] ?? linkStyle,
+          style: resolvedStyle,
           onTapLink: onTapLink,
           onTapDownLink: onTapDownLink,
         ),
