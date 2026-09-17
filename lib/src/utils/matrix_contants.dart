@@ -105,7 +105,7 @@ class MatrixConstants {
 
   static String urlRegExp = r'((?:' +
       kAllSchemes.join('|') +
-      r'):\/\/)?(?:www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.(?:' +
+      r'):\/\/)?(?:www\.)?[a-zA-Z0-9@:%._\+~#=]{1,256}\.(?:' +
       kAllTlds.join('|') +
       r')\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)';
 

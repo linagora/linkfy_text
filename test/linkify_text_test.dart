@@ -886,4 +886,30 @@ void main() {
       () {},
     );
   });
+
+  group('LinkifyTextSpans test url', () {
+    late ThemeData themeData;
+
+    const linkTypes = [LinkType.phone, LinkType.url];
+
+    setUp(() {
+      themeData = ThemeData.light();
+    });
+
+    test('Url with a single-character domain label is turned into a link', () {
+      const text = 'ou sinon le lien : https://s.team/p/cdpm-wvtk/ABCDEFGH';
+      final result = LinkifyTextSpans(
+        text: text,
+        themeData: themeData,
+        linkTypes: linkTypes,
+      );
+
+      final children = result.children;
+      final linkSpans = children!.whereType<LinkTextSpan>().toList();
+
+      expect(linkSpans.length, 1);
+      expect(linkSpans.first.text, 'https://s.team/p/cdpm-wvtk/ABCDEFGH');
+      expect(linkSpans.first.link.type, LinkType.url);
+    });
+  });
 }
